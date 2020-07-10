@@ -1,18 +1,64 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <top-view></top-view>
+    <sales-view></sales-view>
+    <bottom-view></bottom-view>
+    <map-view></map-view>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import { screenData, mapScatter, wordCloud } from '../api'
+import TopView from '../components/TopView'
+import SalesView from '../components/SalesView'
+import BottomView from '../components/BottomView'
+import MapView from '../components/MapView'
 export default {
   name: 'Home',
+  provide () {
+    return {
+      getReportData: this.getReportData,
+      getMapData: this.getMapData,
+      getWordCloud: this.getWordCloud
+    }
+  },
   components: {
-    HelloWorld
+    TopView,
+    SalesView,
+    BottomView,
+    MapView
+  },
+  data () {
+    return {
+      reportData: null,
+      mapData: null,
+      wordCloud: null
+    }
+  },
+  mounted () {
+    screenData().then(data => { this.reportData = data })
+    mapScatter().then(data => { this.mapData = data })
+    wordCloud().then(data => { this.wordCloud = data })
+  },
+  methods: {
+    getReportData () {
+      return this.reportData
+    },
+    getMapData () {
+      return this.mapData
+    },
+    getWordCloud () {
+      return this.wordCloud
+    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.home {
+  padding: 20px;
+  width: 100%;
+  background-color: #eee;
+  box-sizing: border-box;
+}
+</style>
